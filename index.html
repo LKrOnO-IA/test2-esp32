@@ -1,40 +1,38 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle do ESP32</title>
+  <title>Controle de LED</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 20px;
+      margin-top: 50px;
     }
     button {
+      margin: 10px;
       padding: 10px 20px;
       font-size: 16px;
-      margin-top: 10px;
+      cursor: pointer;
+    }
+    #status {
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Controle ESP32 via Web</h1>
-  
+  <h1>Controle do LED</h1>
   <button onclick="enviarComando('ligar')">Ligar LED</button>
   <button onclick="enviarComando('desligar')">Desligar LED</button>
-  
-  <h3>Status do LED: <span id="status">Desconhecido</span></h3>
+  <p>Status do LED: <span id="status">Aguardando...</span></p>
   
   <script>
     // Função para enviar comando para o ESP32
     function enviarComando(comando) {
-      // IP do ESP32
       const url = `http://192.168.0.126/comando?acao=${comando}`;
       
       fetch(url)
         .then(response => response.text())
         .then(data => {
-          // Atualiza o status no site com a resposta do ESP32
           document.getElementById('status').innerText = data;
         })
         .catch(error => {
@@ -42,8 +40,8 @@
           document.getElementById('status').innerText = 'Erro na conexão';
         });
     }
-    
-    // Função para obter o status do LED ao carregar a página
+
+    // Função para obter o status do LED
     function obterStatus() {
       const url = `http://192.168.0.126/status`;
       
@@ -57,9 +55,9 @@
           document.getElementById('status').innerText = 'Erro ao obter status';
         });
     }
-    
-    // Chama a função ao carregar a página
-    obterStatus();
+
+    // Chama obterStatus ao carregar a página
+    window.onload = obterStatus;
   </script>
 </body>
 </html>
